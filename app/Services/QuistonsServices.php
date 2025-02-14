@@ -25,6 +25,7 @@ class QuistonsServices
             'categorie_id' => $request->categorie_id,
             'difficultie_id' => $request->difficultie_id,
             'question_text' => $request->question_text,
+            'time_limit' => $request->time_limit,
        'created_at' => now(),
 'updated_at' => now(),
 

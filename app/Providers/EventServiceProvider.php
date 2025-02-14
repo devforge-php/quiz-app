@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Events\AuthEvent;
 use App\Listeners\ProfileEventListener;
+use App\Listeners\UserListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -19,6 +20,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
        AuthEvent::class => [
         ProfileEventListener::class,
+        UserListener::class,
        ]
     ];
 

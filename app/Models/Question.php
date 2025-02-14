@@ -15,7 +15,7 @@ class Question extends Model
     use HasFactory;
 
 
-    protected $fillable = ['categorie_id', 'question_text', 'difficultie_id'];
+    protected $fillable = ['categorie_id', 'question_text', 'difficultie_id', 'time_limit'];
 
     public function categorie()
     {

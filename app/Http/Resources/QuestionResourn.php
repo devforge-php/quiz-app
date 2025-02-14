@@ -19,6 +19,7 @@ class QuestionResourn extends JsonResource
             'category' => $this->categorie->name ?? null, // To'g'ri model nomi!
             'difficulty' => $this->difficulty->name ?? null, 
             'question_text' => $this->question_text,
+            'time_limit' => $this->time_limit,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Jobs\EmailCodejob;
+use App\Jobs\UserListenerJobs;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -53,7 +54,7 @@ class AuthController extends Controller
             'email' => $userData['email'],
             'password' => Hash::make($userData['password']),
         ]);
-        AuthEvent::dispatch($user);
+        UserListenerJobs::dispatch($user);
         return response()->json([
             'message' => 'Siz Chanlydan royhatdan otdingiz',
         ]);
