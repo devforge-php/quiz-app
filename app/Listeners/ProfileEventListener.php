@@ -26,7 +26,8 @@ class ProfileEventListener
         Profile::create([
          'user_id' => $event->user->id,
          'image' => '',
-         'user_name' => ''
+         'name' => '',
+         'last_name' => '',
         ]);
     }
 }

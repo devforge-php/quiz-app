@@ -34,7 +34,10 @@ class ProfileController extends Controller
             $profile->image = $imagePath; 
         }
 
-        $profile->update($request->only(['user_name']));
+        $profile->update([
+            'name' => $request->name,
+            'last_name' => $request->last_name,
+        ]);
          
         return redirect()->route('profile')->with(['message' => 'ozgartirildi']);
 
