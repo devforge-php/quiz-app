@@ -17,6 +17,7 @@ class ProfileReosurce extends JsonResource
         return [
             'name' => $this->name,
             'email' => $this->email,
+            'score' => $this->score,
             'image' => $this->profile?->image,          // Profildan olingan ma'lumot
             'user_name' => $this->profile?->user_name,  // Profildan olingan ma'lumot
         ];
