@@ -35,7 +35,6 @@ class ProfileController extends Controller
         }
 
         $profile->update([
-            'name' => $request->name,
             'last_name' => $request->last_name,
         ]);
          
@@ -45,14 +44,24 @@ class ProfileController extends Controller
 
     public function userupdate(Request $request)
     {
-     $user = Auth::user();
-     $user->name = $request->input('name');
-     $user->email = $request->input('email');
-
-     $user->save();
-
-     return response()->json(new ProfileReosurce($user));
+        $user = Auth::user();
+    
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+    
+        $request->validate([
+            'user_name' => 'required|string|max:255|unique:users,user_name,' . $user->id,
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+        ]);
+    
+        $user->user_name = $request->input('user_name');
+        $user->email = $request->input('email');
+        $user->save();
+    
+        return response()->json($user);
     }
+    
 
     public function updatepassword(Request $request)
     {

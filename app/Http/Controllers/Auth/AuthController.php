@@ -26,7 +26,7 @@ class AuthController extends Controller
 
     $code = rand(100000, 999999);
 
-    Cache::put($code, $request->only('user_name', 'email', 'password'), now()->addMinutes(5));
+    Cache::put($code, $request->only('name', 'email', 'password'), now()->addMinutes(5));
     Cache::put("email_sent_$email", true, now()->addMinutes(1));
 
     EmailCodejob::dispatch($code, $email);

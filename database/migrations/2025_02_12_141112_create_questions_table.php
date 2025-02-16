@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('categorie_id')->constrained()->onDelete('cascade');
             $table->foreignId('difficultie_id')->constrained('difficulties')->onDelete('cascade');
             $table->text('question_text');
+            $table->integer('time_limit')->nullable()->default(60);
             $table->timestamps();
         });
     }
