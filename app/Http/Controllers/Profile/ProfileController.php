@@ -35,6 +35,7 @@ class ProfileController extends Controller
         }
 
         $profile->update([
+            'name' => $request->name,
             'last_name' => $request->last_name,
         ]);
          
@@ -59,7 +60,7 @@ class ProfileController extends Controller
         $user->email = $request->input('email');
         $user->save();
     
-        return response()->json($user);
+        return response()->json(new ProfileReosurce($user));
     }
     
 

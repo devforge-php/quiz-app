@@ -23,7 +23,7 @@ class UserListener
     public function handle(AuthEvent $event): void
     {
      Notifaction::create([
-            'name' => "Yangi user tizimdan ro'yhatdan otdi ismi  " . $event->user->name . ' email ' . $event->user->email,
+            'name' => "Yangi user tizimdan ro'yhatdan otdi ismi  " . $event->user->user_name . ' email ' . $event->user->email,
         ]);
         
     }
