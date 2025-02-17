@@ -1,66 +1,129 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Quiz App API Documentation
+Overview
+This project is a quiz app with authentication and user profiles. It provides an API to register, log in, view and update profiles, and take quizzes.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+API Endpoints
+1. Authentication
+Register
+POST /register
+Registers a new user.
+Request body:
+json
+Копировать
+Редактировать
+{
+  "name": "user_name",
+  "email": "user@example.com",
+  "password": "your_password"
+}
+Verify
+POST /verifiy
+Verifies the user email after registration.
+Request body:
+json
+Копировать
+Редактировать
+{
+  "email": "user@example.com",
+  "verification_code": "code_from_email"
+}
+Login
+POST /login
+Logs in a registered user and provides an authentication token.
+Request body:
+json
+Копировать
+Редактировать
+{
+  "email": "user@example.com",
+  "password": "your_password"
+}
+Logout
+POST /logout
+Logs out the user. Requires authentication.
+Authentication: Bearer token required in the header.
+2. Profile Management
+View Profile
+GET /profile
+Retrieves the user's profile information.
+Authentication: Bearer token required in the header.
+Update Profile
+POST /profile
+Updates the user's profile information.
+Request body:
+json
+Копировать
+Редактировать
+{
+  "name": "new_name",
+  "email": "new_email@example.com"
+}
+Update User Info
+PUT /userupdate
+Updates the user's information such as name or email.
+Request body:
+json
+Копировать
+Редактировать
+{
+  "name": "new_name",
+  "email": "new_email@example.com"
+}
+Update Password
+PATCH /passwordupdate
+Updates the user's password.
+Request body:
+json
+Копировать
+Редактировать
+{
+  "current_password": "current_password",
+  "new_password": "new_password"
+}
+3. Quiz and Questions
+Get Questions
+POST /questions
+Retrieves a set of quiz questions for the user.
+Authentication: Bearer token required in the header.
+Check Answers
+POST /check-answers
+Checks the answers provided by the user.
+Request body:
+json
+Копировать
+Редактировать
+{
+  "question_id": 1,
+  "answer": "user_answer"
+}
+Get Levels
+GET /levels
+Retrieves a list of available quiz levels (e.g., Beginner, Intermediate, Advanced).
+Search Questions
+GET /search
+Searches for quiz questions by keyword.
+Request parameters:
+query: The search keyword.
+Authentication
+All endpoints except registration and login require authentication via sanctum tokens. Upon successful login, the API will return a token that should be included in the Authorization header as Bearer token_value for protected routes.
 
-## About Laravel
+Example of an authenticated request header:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+plaintext
+Копировать
+Редактировать
+Authorization: Bearer your_token_here
+Error Handling
+400 Bad Request: Invalid data provided.
+401 Unauthorized: Invalid or missing authentication token.
+404 Not Found: Resource not found.
+500 Internal Server Error: Server error.
+Conclusion
+This API allows users to register, log in, manage their profiles, and take quizzes. Authentication is handled using Laravel Sanctum, and all the routes that modify data or access user-specific information require a valid API token.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
