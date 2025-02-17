@@ -28,8 +28,8 @@ This project is a quiz app with authentication and user profiles. It provides an
   - **Request body:**
     ```json
     {
-      "email": "user@example.com",
-      "verification_code": "code_from_email"
+
+      "code": "code_from_email"
     }
     ```
 
