@@ -3,23 +3,18 @@
 namespace App\Http\Controllers\users;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ProfileReosurce;
-use App\Models\User;
+use App\Services\LogikServices;
 use Illuminate\Http\Request;
 
 class UserSearchController extends Controller
 {
+  public $logikservices;
+  public function __construct(LogikServices $logikservices)
+  {
+    $this->logikservices = $logikservices;
+  }
   public function search(Request $request)
   {
-    // Qidiruv so'rovini olish
-    $query = $request->input('user_name');
-
-    // Userlar jadvalidan qidiruvni amalga oshirish
-    $users = User::where('user_name', 'LIKE', '%' . $query . '%')
-                 ->with('profile') // Profile bilan bog'langan ma'lumotlarni yuklash
-                 ->get();
-
-    // Natijani qaytarish
-    return response()->json(ProfileReosurce::collection($users));    
+        return $this->logikservices->search($request);
   }
 }

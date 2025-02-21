@@ -4,37 +4,43 @@ namespace App\Http\Controllers\admin\Users;
 
 use App\Http\Controllers\Controller;
 use App\Services\UserControllerServices;
-use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
-  public $usercontrollerservices;
-  public function __construct(UserControllerServices $usercontrollerservices)
-  {
-    $this->usercontrollerservices = $usercontrollerservices;
-  }
-    public function index()
+    protected $userControllerServices;
+
+    public function __construct(UserControllerServices $userControllerServices)
     {
-        return $this->usercontrollerservices->index();
+        $this->userControllerServices = $userControllerServices;
     }
 
- 
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function index(): JsonResponse
     {
-        return $this->usercontrollerservices->show($id);
+        $users = $this->userControllerServices->index();
+        return response()->json(UserResource::collection($users));
     }
 
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function show(string $id): JsonResponse
     {
-        return $this->usercontrollerservices->destroy($id);
+        $user = $this->userControllerServices->show($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        return response()->json(new UserResource($user));
+    }
+
+    public function destroy(string $id): JsonResponse
+    {
+        $deleted = $this->userControllerServices->destroy($id);
+
+        if (!$deleted) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        return response()->json(['message' => 'User deleted successfully']);
     }
 }

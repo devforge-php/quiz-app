@@ -3,40 +3,34 @@
 namespace App\Http\Controllers\admin\Notifactions;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserNotifactionResource;
-use App\Models\Notifaction;
+use App\Services\LogikServices;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserNotifactionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected $logikService;
+
+    public function __construct(LogikServices $logikService)
     {
-        $user = Notifaction::paginate(10);
-        return response()->json(UserNotifactionResource::collection($user));
+        $this->logikService = $logikService;
     }
 
- 
-
-   
-    public function show(string $id)
+    public function index(Request $request): JsonResponse
     {
-        $user  = Notifaction::find($id);
-        return response()->json(new UserNotifactionResource($user));
+        $notifactions = $this->logikService->getAllNotifactions();
+        return response()->json($notifactions);
     }
 
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function show(string $id): JsonResponse
     {
-        $user  = Notifaction::find($id);
+        $notifaction = $this->logikService->getNotifactionById($id);
+        return response()->json($notifaction);
+    }
 
-        $user->delete();
-        return response()->json(['message' => 'Delete ']);
+    public function destroy(string $id): JsonResponse
+    {
+        $deleted = $this->logikService->deleteNotifaction($id);
+        return response()->json($deleted);
     }
 }

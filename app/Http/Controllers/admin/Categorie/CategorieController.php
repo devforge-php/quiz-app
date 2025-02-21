@@ -4,50 +4,55 @@ namespace App\Http\Controllers\admin\Categorie;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
+use App\Http\Resources\Category;
 use App\Services\CategorieServices;
 use Illuminate\Http\Request;
 
 class CategorieController extends Controller
 {
-  public $categoryservices;
-  public function __construct(CategorieServices $categoryservices)
-  {
-    $this->categoryservices = $categoryservices;
-  }
+    protected $categoryService;
+
+    public function __construct(CategorieServices $categoryService)
+    {
+        $this->categoryService = $categoryService;
+    }
+
     public function index()
     {
-     return $this->categoryservices->index();
+        $categories = $this->categoryService->index();
+        return response()->json(Category::collection($categories));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(CategoryRequest $request)
     {
-        return $this->categoryservices->store($request);
+        $category = $this->categoryService->store($request);
+        return response()->json(new Category($category), 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        return $this->categoryservices->show($id);
+        $category = $this->categoryService->show($id);
+        if (!$category) {
+            return response()->json(['message' => 'Kategoriya topilmadi'], 404);
+        }
+        return response()->json(new Category($category));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(CategoryRequest $request, string $id)
+    public function update(CategoryRequest $request, $id)
     {
-        return $this->categoryservices->update($request, $id);
+        $category = $this->categoryService->update($request, $id);
+        if (!$category) {
+            return response()->json(['message' => 'Kategoriya topilmadi'], 404);
+        }
+        return response()->json(['message' => 'O\'zgartirildi', 'category' => new Category($category)]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        return $this->categoryservices->destroy($id);
+        $deleted = $this->categoryService->destroy($id);
+        if (!$deleted) {
+            return response()->json(['message' => 'Kategoriya topilmadi'], 404);
+        }
+        return response()->json(['message' => 'Kategoriya o\'chirildi']);
     }
 }

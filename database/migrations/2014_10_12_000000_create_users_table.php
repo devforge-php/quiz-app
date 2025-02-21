@@ -21,6 +21,11 @@ return new class extends Migration
             $table->integer('score')->default(0);
             $table->rememberToken();
             $table->timestamps();
+
+
+            $table->index('role');
+            $table->index('score');
+            $table->index('user_name');
         });
     }
 

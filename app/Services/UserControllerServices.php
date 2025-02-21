@@ -4,26 +4,28 @@ namespace App\Services;
 
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 
 class UserControllerServices
 {
-    public function index()
+    public function index(): Collection
     {
-        $user = User::all();
-         return response()->json(UserResource::collection($user));
+        return User::all();
     }
-    public function show(string $id)
+
+    public function show(string $id): ?User
     {
-        $user  = User::find($id);
-        return response()->json(new UserResource($user));
+        return User::find($id);
     }
-    public function destroy($id)
+
+    public function destroy(string $id): bool
     {
         $user = User::find($id);
-        $user->delete($id);
-        return response()->json(['message' => 'ochirildi']);
+        
+        if (!$user) {
+            return false;
+        }
+
+        return $user->delete();
     }
 }
-
-
-?>

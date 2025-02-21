@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('answers', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('question_id')->constrained('questions')->onDelete('cascade');
-    $table->text('answer_text');
-    $table->boolean('is_correct')->default(false);
-            $table->timestamps();
-
+        Schema::table('user', function (Blueprint $table) {
+            $table->timestamp('answered_at')->nullable();
         });
     }
 
@@ -26,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('answers');
+        Schema::table('user', function (Blueprint $table) {
+            //
+        });
     }
 };

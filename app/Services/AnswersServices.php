@@ -1,60 +1,35 @@
-<?php 
+<?php
 
 namespace App\Services;
 
-use App\Http\Resources\AnswersResource;
+use App\Http\Requests\AnswerRequest;
 use App\Models\Answer;
 use Illuminate\Http\Request;
 
-class AnswersServices 
+class AnswersServices
 {
-    /**
-     * Barcha javoblarni olish (GET /answers)
-     */
     public function index()
     {
-        $answers = Answer::all();
-        return response()->json(AnswersResource::collection($answers), 200);
+        return Answer::all();
     }
 
-    /**
-     * Yangi javob yaratish (POST /answers)
-     */
-    public function store(Request $request)
+    public function store(AnswerRequest $request)
     {
-        $data = $request->validate([
-            'question_id' => 'required|exists:questions,id',
-            'answer_text' => 'required|string|max:255',
-            'is_correct' => 'required|boolean',
-        ]);
-
-        $answer = Answer::create($data);
-        return response()->json(new AnswersResource($answer), 201);
+        $data = $request->all();
+        return Answer::create($data);
     }
 
-    /**
-     * Bitta javobni olish (GET /answers/{id})
-     */
     public function show($id)
     {
-        $answer = Answer::find($id);
-        
-        if (!$answer) {
-            return response()->json(['message' => 'Answer not found'], 404);
-        }
-
-        return response()->json(new AnswersResource($answer), 200);
+        return Answer::find($id);
     }
 
-    /**
-     * Javobni yangilash (PUT /answers/{id})
-     */
-    public function update(Request $request, $id)
+    public function update(AnswerRequest $request, $id)
     {
         $answer = Answer::find($id);
 
         if (!$answer) {
-            return response()->json(['message' => 'Answer not found'], 404);
+            return null;
         }
 
         $data = $request->validate([
@@ -64,21 +39,18 @@ class AnswersServices
         ]);
 
         $answer->update($data);
-        return response()->json(new AnswersResource($answer), 200);
+        return $answer;
     }
 
-    /**
-     * Javobni o‘chirish (DELETE /answers/{id})
-     */
     public function destroy($id)
     {
         $answer = Answer::find($id);
 
         if (!$answer) {
-            return response()->json(['message' => 'Answer not found'], 404);
+            return false;
         }
 
         $answer->delete();
-        return response()->json(['message' => 'Answer deleted successfully'], 200);
+        return true;
     }
 }

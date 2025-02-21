@@ -37,8 +37,8 @@ Route::middleware(['auth:sanctum'])->group( function () {
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group( function () {
     Route::apiResource('category', CategorieController::class);
-    Route::apiResource('questions', QuistonsController::class);
-    Route::apiResource('answers', AnswersController::class);
+    Route::apiResource('question', QuistonsController::class);
+    Route::apiResource('answer', AnswersController::class);
     Route::apiResource('notifactions', UserNotifactionController::class);
     Route::apiResource('users', UserController::class);
 });

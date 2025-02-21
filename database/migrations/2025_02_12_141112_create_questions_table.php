@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('question_text');
             $table->integer('time_limit')->nullable()->default(60);
             $table->timestamps();
+
         });
     }
     

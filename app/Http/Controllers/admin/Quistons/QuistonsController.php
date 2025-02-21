@@ -1,54 +1,50 @@
 <?php
 
-namespace App\Http\Controllers\admin\Quistons;
+namespace App\Http\Controllers\Admin\Quistons;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\QuestionRequest;
+use App\Http\Resources\QuestionResourn;
 use App\Models\Question;
 use App\Services\QuistonsServices;
 use Illuminate\Http\Request;
 
 class QuistonsController extends Controller
 {
-public $questionservices;
-public function __construct(QuistonsServices $questionservices)
-{
-    $this->questionservices = $questionservices;
-}
+    protected $questionservices;
+
+    public function __construct(QuistonsServices $questionservices)
+    {
+        $this->questionservices = $questionservices;
+    }
+
     public function index()
     {
-        return $this->questionservices->index();
+        $questions = $this->questionservices->index();
+        return response()->json(QuestionResourn::collection($questions));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(QuestionRequest $request)
     {
-        return $this->questionservices->store($request);   
+        $question = $this->questionservices->store($request);
+        return response()->json(new QuestionResourn($question), 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Question $question)
     {
-        return $this->questionservices->show($question);
+        $question = $this->questionservices->show($question);
+        return response()->json(new QuestionResourn($question));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(QuestionRequest $request,Question $question)
+    public function update(QuestionRequest $request, Question $question)
     {
-        return $this->questionservices->update($request, $question);
+        $question = $this->questionservices->update($request, $question);
+        return response()->json(new QuestionResourn($question));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Question $question)
     {
-        return $this->questionservices->destroy($question);
+        $this->questionservices->destroy($question);
+        return response()->json(['message' => 'Question deleted successfully'], 200);
     }
 }

@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\admin\Answers;
+namespace App\Http\Controllers\Admin\Answers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AnswerRequest;
+use App\Http\Resources\AnswersResource;
 use App\Services\AnswersServices;
 use Illuminate\Http\Request;
 
@@ -17,26 +19,46 @@ class AnswersController extends Controller
 
     public function index()
     {
-        return $this->answersService->index();
+        $answers = $this->answersService->index();
+        return response()->json(AnswersResource::collection($answers), 200);
     }
 
-    public function store(Request $request)
+    public function store(AnswerRequest $request)
     {
-        return $this->answersService->store($request);
+        $answer = $this->answersService->store($request);
+        return response()->json(new AnswersResource($answer), 201);
     }
 
     public function show($id)
     {
-        return $this->answersService->show($id);
+        $answer = $this->answersService->show($id);
+
+        if (!$answer) {
+            return response()->json(['message' => 'Answer not found'], 404);
+        }
+
+        return response()->json(new AnswersResource($answer), 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(AnswerRequest $request, $id)
     {
-        return $this->answersService->update($request, $id);
+        $answer = $this->answersService->update($request, $id);
+
+        if (!$answer) {
+            return response()->json(['message' => 'Answer not found'], 404);
+        }
+
+        return response()->json(new AnswersResource($answer), 200);
     }
 
     public function destroy($id)
     {
-        return $this->answersService->destroy($id);
+        $deleted = $this->answersService->destroy($id);
+
+        if (!$deleted) {
+            return response()->json(['message' => 'Answer not found'], 404);
+        }
+
+        return response()->json(['message' => 'Answer deleted successfully'], 200);
     }
 }
