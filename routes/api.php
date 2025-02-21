@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 // auth start
 
 Route::post('register', [AuthController::class, 'register']);
-Route::post('verifiy', [AuthController::class, 'verifiy']);
+Route::post('verifiy', [AuthController::class, 'verify']);
 
 Route::post('login', [AuthController::class, 'login']);
 

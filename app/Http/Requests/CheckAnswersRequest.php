@@ -22,7 +22,9 @@ class CheckAnswersRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'answers' => 'required|array',
+            'answers.*.question_id' => 'required|exists:questions,id',
+            'answers.*.answer_id' => 'required|exists:answers,id',
         ];
     }
 }

@@ -5,82 +5,41 @@ namespace App\Http\Controllers\Profile;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileUpdate;
 use App\Http\Resources\ProfileReosurce;
-use App\Models\Profile;
+use App\Http\Resources\ProfileResource;
+use App\Services\ProfileServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
+    protected $profileService;
+
+    public function __construct(ProfileServices $profileService)
+    {
+        $this->profileService = $profileService;
+    }
+
     public function show()
     {
         $user = Auth::user();
-
         return response()->json(new ProfileReosurce($user));
     }
+
     public function update(Request $request)
     {
-    $profile = Auth::user()->profile;
-
-    if (!$profile) {
-        return response()->json(['error' => 'Profil topilmadi'], 404);
-    }
-       
-         if ($request->hasFile('image')) {
-  
-            $image = $request->file('image');
-            $imagePath = $image->store('profiles', 'public'); 
-            $profile->image = $imagePath; 
-        }
-
-        $profile->update([
-            'name' => $request->name,
-            'last_name' => $request->last_name,
-        ]);
-         
-        return redirect()->route('profile')->with(['message' => 'ozgartirildi']);
-
+        $this->profileService->updateProfile($request);
+        return redirect()->route('profile')->with(['message' => 'O\'zgartirildi']);
     }
 
-    public function userupdate(Request $request)
+    public function userUpdate(Request $request)
     {
-        $user = Auth::user();
-    
-        if (!$user) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-    
-        $request->validate([
-            'user_name' => 'required|string|max:255|unique:users,user_name,' . $user->id,
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-        ]);
-    
-        $user->user_name = $request->input('user_name');
-        $user->email = $request->input('email');
-        $user->save();
-    
-        return response()->json(new ProfileReosurce($user));
+        $this->profileService->updateUser($request);
+        return response()->json(['message' => 'Foydalanuvchi yangilandi']);
     }
-    
 
-    public function updatepassword(Request $request)
+    public function updatePassword(Request $request)
     {
-  $user = Auth::user();
-
-  if (!Hash::check($request->old_password, $user->password)) {
-    return response()->json(['message' => 'Eski parol noto\'g\'ri.'], 400);
-}
- 
-   $validator = Validator::make($request->all(), [
-     'new_password' => ['required', 'string', 'max:8', ],
-   ]);
-       
-
-        $user->password = Hash::make($request->new_password);
-        $user->save();
+        $this->profileService->changePassword($request);
         return response()->json(['message' => 'Parol muvaffaqiyatli yangilandi']);
-
     }
-
 }

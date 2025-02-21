@@ -2,45 +2,43 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Events\AuthEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Jobs\EmailCodejob;
-use App\Jobs\UserListenerJobs;
-use App\Models\User;
 use App\Services\AuthServices;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public $AuthServices;
-    public function __construct(AuthServices $AuthServices)
+    protected $authServices;
+
+    public function __construct(AuthServices $authServices)
     {
-        $this->AuthServices = $AuthServices;
+        $this->authServices = $authServices;
     }
-    public function register(RegisterRequest $request)
+
+    public function register(RegisterRequest $request): JsonResponse
     {
-     return $this->AuthServices->register($request);
+        $response = $this->authServices->register($request);
+        return response()->json($response['data'], $response['status']);
     }
-    
 
-public function verifiy(Request $request)
-{
-    
-    return $this->AuthServices->verifiy($request);
-  }
+    public function verify(Request $request): JsonResponse
+    {
+        $response = $this->authServices->verify($request);
+        return response()->json($response['data'], $response['status']);
+    }
 
-public function login(LoginRequest $request)
-{
-    return $this->AuthServices->login($request);
-}
+    public function login(LoginRequest $request): JsonResponse
+    {
+        $response = $this->authServices->login($request);
+        return response()->json($response['data'], $response['status']);
+    }
 
-public function logout(Request $request)
-{
-    return $this->AuthServices->logout($request);
-}
+    public function logout(Request $request): JsonResponse
+    {
+        $response = $this->authServices->logout($request);
+        return response()->json($response['data'], $response['status']);
+    }
 }

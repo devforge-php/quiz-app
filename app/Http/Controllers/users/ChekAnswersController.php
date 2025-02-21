@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\users;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CheckAnswersRequest;
 use App\Services\QuizServices;
 use Illuminate\Http\Request;
 
@@ -15,14 +16,10 @@ class ChekAnswersController extends Controller
         $this->quizServices = $quizServices;
     }
 
-    public function checkAnswers(Request $request)
+    public function checkAnswers(CheckAnswersRequest $request)
     {
         // Validatsiya
-        $validated = $request->validate([
-            'answers' => 'required|array',
-            'answers.*.question_id' => 'required|exists:questions,id',
-            'answers.*.answer_id' => 'required|exists:answers,id',
-        ]);
+        $validated = $request->validate();
 
         $user = auth()->user();
 
