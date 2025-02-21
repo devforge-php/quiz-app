@@ -2,40 +2,39 @@
 
 ## Overview
 
-This project is a quiz app with authentication and user profiles. It provides an API to register, log in, view and update profiles, and take quizzes.
+This project is a quiz app with authentication and user profiles. The API allows users to register, log in, manage profiles, take quizzes, and provides administrative functionalities.
 
 ---
 
-## API Endpoints
+## 1. Authentication API
 
-### 1. Authentication
-
-#### Register
+### Register
 - **POST** `/api/register`
   - Registers a new user.
-  - **Request body:**
+  - **Request Body:**
     ```json
     {
       "name": "user_name",
       "email": "user@example.com",
-      "password": "your_password"
+      "password": "your_password",
+      "password_confirmation": "your_password"
     }
     ```
 
-#### Verify
+### Email Verification
 - **POST** `/api/verifiy`
-  - Verifies the user email after registration.
-  - **Request body:**
+  - Verifies the user's email after registration.
+  - **Request Body:**
     ```json
     {
-      "code": "code_from_email"
+      "code": "verification_code"
     }
     ```
 
-#### Login
+### Login
 - **POST** `/api/login`
-  - Logs in a registered user and provides an authentication token.
-  - **Request body:**
+  - Logs in a registered user.
+  - **Request Body:**
     ```json
     {
       "email": "user@example.com",
@@ -43,35 +42,90 @@ This project is a quiz app with authentication and user profiles. It provides an
     }
     ```
 
-#### Logout
+### Logout
 - **POST** `/api/logout`
-  - Logs out the user. Requires authentication.
-  - **Authentication:** Bearer token required in the header.
+  - Logs out the user.
 
 ---
 
-### 2. Profile Management
+## 2. Admin API
 
-#### View Profile
+### Manage Categories
+- **CRUD:** `/api/category`
+  - Create, update, delete categories (e.g., PHP, JavaScript, Go).
+
+### Manage Questions
+- **CRUD:** `/api/question`
+  - Create questions linked to a category and difficulty level.
+
+### Manage Answers
+- **CRUD:** `/api/answer`
+  - Create answers linked to a question.
+  - **is_correct** field determines if the answer is correct (1 or 0).
+
+### Manage Users
+- **CRUD:** `/api/users`
+  - Admin can manage registered users.
+
+### Notifications
+- **GET** `/api/notifactions`
+  - Admin receives notifications when a new user registers.
+
+---
+
+## 3. User API
+
+### Get Questions
+- **POST** `/api/questions`
+  - **Parameters:**
+    ```json
+    {
+      "category": "PHP",
+      "level": "Beginner",
+      "limit": 10
+    }
+    ```
+
+### Check Answers
+- **POST** `/api/check-answers`
+  - **Request Body:**
+    ```json
+    {
+      "question_id": 1,
+      "answer": "user_answer"
+    }
+    ```
+
+### View Rankings
+- **GET** `/api/levels`
+  - Retrieves user rankings based on scores.
+
+### Search Users
+- **GET** `/api/search?query={search_term}`
+  - Search users by username.
+
+---
+
+## 4. Profile Management
+
+### View Profile
 - **GET** `/api/profile`
-  - Retrieves the user's profile information.
-  - **Authentication:** Bearer token required in the header.
+  - Retrieves user profile information.
 
-#### Update Profile
+### Update Profile
 - **POST** `/api/profile`
-  - Updates the user's profile information.
-  - **Request body:**
+  - **Request Body:**
     ```json
     {
       "name": "new_name",
-      "email": "new_email@example.com"
+      "last_name": "new_last_name",
+      "image": "profile_image_url"
     }
     ```
 
-#### Update User Info
+### Update User Information
 - **PUT** `/api/userupdate`
-  - Updates the user's information such as name or email.
-  - **Request body:**
+  - **Request Body:**
     ```json
     {
       "name": "new_name",
@@ -79,10 +133,9 @@ This project is a quiz app with authentication and user profiles. It provides an
     }
     ```
 
-#### Update Password
+### Update Password
 - **PATCH** `/api/passwordupdate`
-  - Updates the user's password.
-  - **Request body:**
+  - **Request Body:**
     ```json
     {
       "old_password": "current_password",
@@ -92,41 +145,7 @@ This project is a quiz app with authentication and user profiles. It provides an
 
 ---
 
-### 3. Quiz and Questions
-
-#### Get Questions
-- **POST** `/api/questions`
-  - Retrieves a set of quiz questions for the user.
-  - **Authentication:** Bearer token required in the header.
-
-#### Check Answers
-- **POST** `/api/check-answers`
-  - Checks the answers provided by the user.
-  - **Request body:**
-    ```json
-    {
-      "answers": [
-        {
-          "question_id": 1,
-          "answer": "user_answer"
-        }
-      ]
-    }
-    ```
-
-#### Get Levels
-- **GET** `/api/levels`
-  - Retrieves a list of available quiz levels (e.g., Beginner, Intermediate, Advanced).
-
-#### Search Questions
-- **GET** `/api/search?query={search_term}`
-  - Searches for quiz questions by keyword.
-  - **Request parameters:**
-    - `query`: The search keyword.
-
----
-
-## Authentication
+## 5. Authentication
 
 All endpoints except registration and login require authentication via `sanctum` tokens. Upon successful login, the API will return a token that should be included in the `Authorization` header as `Bearer token_value` for protected routes.
 
