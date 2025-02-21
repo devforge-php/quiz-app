@@ -19,7 +19,7 @@ class ChekAnswersController extends Controller
     public function checkAnswers(CheckAnswersRequest $request)
     {
         // Validatsiya
-        $validated = $request->validate();
+        $validated = $request->all();
 
         $user = auth()->user();
 
