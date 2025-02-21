@@ -11,7 +11,7 @@ This project is a quiz app with authentication and user profiles. It provides an
 ### 1. Authentication
 
 #### Register
-- **POST** `/register`
+- **POST** `/api/register`
   - Registers a new user.
   - **Request body:**
     ```json
@@ -23,18 +23,17 @@ This project is a quiz app with authentication and user profiles. It provides an
     ```
 
 #### Verify
-- **POST** `/verifiy`
+- **POST** `/api/verifiy`
   - Verifies the user email after registration.
   - **Request body:**
     ```json
     {
-
       "code": "code_from_email"
     }
     ```
 
 #### Login
-- **POST** `/login`
+- **POST** `/api/login`
   - Logs in a registered user and provides an authentication token.
   - **Request body:**
     ```json
@@ -45,7 +44,7 @@ This project is a quiz app with authentication and user profiles. It provides an
     ```
 
 #### Logout
-- **POST** `/logout`
+- **POST** `/api/logout`
   - Logs out the user. Requires authentication.
   - **Authentication:** Bearer token required in the header.
 
@@ -54,12 +53,12 @@ This project is a quiz app with authentication and user profiles. It provides an
 ### 2. Profile Management
 
 #### View Profile
-- **GET** `/profile`
+- **GET** `/api/profile`
   - Retrieves the user's profile information.
   - **Authentication:** Bearer token required in the header.
 
 #### Update Profile
-- **POST** `/profile`
+- **POST** `/api/profile`
   - Updates the user's profile information.
   - **Request body:**
     ```json
@@ -70,7 +69,7 @@ This project is a quiz app with authentication and user profiles. It provides an
     ```
 
 #### Update User Info
-- **PUT** `/userupdate`
+- **PUT** `/api/userupdate`
   - Updates the user's information such as name or email.
   - **Request body:**
     ```json
@@ -81,12 +80,12 @@ This project is a quiz app with authentication and user profiles. It provides an
     ```
 
 #### Update Password
-- **PATCH** `/passwordupdate`
+- **PATCH** `/api/passwordupdate`
   - Updates the user's password.
   - **Request body:**
     ```json
     {
-      "current_password": "current_password",
+      "old_password": "current_password",
       "new_password": "new_password"
     }
     ```
@@ -96,27 +95,31 @@ This project is a quiz app with authentication and user profiles. It provides an
 ### 3. Quiz and Questions
 
 #### Get Questions
-- **POST** `/questions`
+- **POST** `/api/questions`
   - Retrieves a set of quiz questions for the user.
   - **Authentication:** Bearer token required in the header.
 
 #### Check Answers
-- **POST** `/check-answers`
+- **POST** `/api/check-answers`
   - Checks the answers provided by the user.
   - **Request body:**
     ```json
     {
-      "question_id": 1,
-      "answer": "user_answer"
+      "answers": [
+        {
+          "question_id": 1,
+          "answer": "user_answer"
+        }
+      ]
     }
     ```
 
 #### Get Levels
-- **GET** `/levels`
+- **GET** `/api/levels`
   - Retrieves a list of available quiz levels (e.g., Beginner, Intermediate, Advanced).
 
 #### Search Questions
-- **GET** `/search`
+- **GET** `/api/search?query={search_term}`
   - Searches for quiz questions by keyword.
   - **Request parameters:**
     - `query`: The search keyword.
@@ -130,3 +133,5 @@ All endpoints except registration and login require authentication via `sanctum`
 **Example of an authenticated request header:**
 ```plaintext
 Authorization: Bearer your_token_here
+```
+
